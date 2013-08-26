@@ -1,0 +1,293 @@
+" Install Vundle Packages
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required!
+Bundle 'gmarik/vundle'
+
+" Rest of my bundles
+
+" -- File Nav --
+" Quick find files in project
+Bundle 'kien/ctrlp.vim'
+" File tree navigation
+Bundle 'scrooloose/nerdtree'
+" Switch to alternate file
+Bundle 'a.vim'
+" Allow opening to a line from file name using :
+Bundle 'file-line'
+" Git integration
+Bundle 'tpope/vim-fugitive'
+" Needs Vim compiled with Ruby
+" Quick find files in project
+Bundle 'wincent/Command-T' 
+
+" -- Buffer Nav --
+" Tree view for managing tabs
+"Bundle 'kien/tabman.vim'
+" Quick buffer switching
+Bundle 'sandeepcr529/Buffet.vim'
+" Needs Vim compiled with Ruby
+" Buffer toggler
+"Bundle 'mutewinter/LustyJuggler'
+
+" -- Nav in file --
+" Ctags file parsing
+"Bundle 'taglist.vim'
+Bundle 'majutsushi/tagbar'
+" Syntax checking
+Bundle 'scrooloose/syntastic'
+" Project Searching
+Bundle 'mileszs/ack.vim'
+" Easy Toggle of QuickFix window
+Bundle 'ViViDboarder/QFixToggle'
+
+" -- Text Manipulation --
+" Easy comments
+Bundle 'tomtom/tcomment_vim'
+" Surround for wrapping text
+Bundle 'tpope/vim-surround'
+" Multi cursor
+Bundle 'terryma/vim-multiple-cursors'
+
+" -- GUI --
+Bundle 'vividchalk.vim'
+" Can probably drop this for wombat256
+Bundle 'vim-scripts/Wombat' 
+Bundle 'wombat256.vim'
+Bundle 'gregsexton/MatchTag'
+" Custom Status Line
+Bundle 'bling/vim-airline'
+"Powerline Config
+"If using a patched font: https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts 
+"let g:airline_powerline_fonts = 1
+
+" -- Filetypes --
+Bundle 'ViViDboarder/vim-forcedotcom'
+Bundle 'pdurbin/vim-tsv'
+
+" ***************************
+" Built in settings
+" ***************************
+
+"Allows filetype detection
+filetype on
+
+" Enable mouse input
+set mousehide
+set mouse=a
+
+" Tab functionality
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set autoindent
+" Ensure backspace actually works
+set backspace=2
+" Display filename at bottom of window
+set ls=2
+
+" Set backup dirs
+set backup
+set backupdir=~/.vim/backup
+set directory=~/.vim/tmp
+
+"enable line numbers
+set nu
+
+" Highlights the line the cursor is on
+set cursorline
+:hi CursorLine   cterm=NONE ctermbg=darkred guibg=darkred guifg=white
+
+" Syntax Hightlighting
+syntax on
+
+" Enable search highlighting
+set hls
+
+" Change Working Directory to that of the current file
+cmap cwd lcd %:p:h
+cmap cd. lcd %:p:h
+
+" ********************************
+" GUI SETTINGS
+" *****************************
+
+" Set theme based on $VIM_COLOR variable
+try
+    if !empty($VIM_COLOR)
+        colorscheme $VIM_COLOR
+    else
+        if has("gui_running")
+            colorscheme wombat
+        else
+            colorscheme vividchalk
+        endif
+    endif
+catch /^Vim\%((\a\+)\)\=:E185/
+        " Colorschemes not installed yet
+        " This happens when first installing bundles
+endtry
+
+" Set gui fonts
+if has("gui_running")
+    if has("gui_win32")       
+        set guifont=Consolas:h10:b
+    elseif has("gui_macvim")
+        try
+            set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h11
+        catch
+            " Failed to set font
+        endtry
+    endif
+endif
+
+" Set xterm title, and inform vim of screen/tmux's syntax for doing the same
+set titlestring=vim\ %{expand(\"%t\")}
+if &term =~ "^screen"
+    " pretend this is xterm.  it probably is anyway, but if term is left as
+    " `screen`, vim doesn't understand ctrl-arrow.
+    if &term == "screen-256color"
+        set term=xterm-256color
+    else
+        set term=xterm
+    endif
+
+    " gotta set these *last*, since `set term` resets everything
+    set t_ts=k
+    set t_fs=\
+endif
+set title
+
+" ********************************
+" SET HOTKEYS
+" ********************************
+
+" Remap jk to esc
+inoremap jk <esc>
+
+" Bind Make to F5 like other IDEs
+nnoremap <F5> :make<CR>
+
+" Remap Ctrl+Space for auto Complete
+inoremap <C-Space> <C-n>
+inoremap <Nul> <C-n>
+
+" Toggle highlighting with \hr (highlight row)
+nnoremap <leader>hr :set cursorline!<CR>
+
+" Toggle Line numbers with Ctrl+N double tap
+nmap <C-N><C-N> :set invnumber<CR>
+nmap <leader>ln :set invnumber<CR>
+
+" Toggle line wrap with Ctrl+L double tap
+nmap <C-L><C-L> :set wrap!<CR>
+nmap <leader>lw :set wrap!<CR>
+
+" Toggle White Space
+nmap <leader>ws :set list!<CR>
+
+" Map Shift+U to redo
+nnoremap <S-u> <C-r> 
+
+" Stupid shift key fixes
+cmap WQ<CR> wq<CR>
+cmap Wq<CR> wq<CR>
+cmap W<CR> w<CR>
+cmap Q<CR> q<CR>
+cmap Q!<CR> q!<CR>
+
+" Clearing highlighted search
+nmap <silent> <leader>/ :set hlsearch! hlsearch?<CR>
+noremap <C-h><C-s> :set hlsearch! hlsearch?<CR>
+" Clear search 
+nmap <silent> <leader>cs :nohlsearch<CR>
+
+" Code fold
+nmap <leader>cf ?{<CR>zf%<ESC>:nohlsearch<CR>
+
+" ********************************
+" PLUGIN SETTINGS
+" ********************************
+
+" Buffet shortcut
+nnoremap <silent> <F2> :Bufferlist<CR>
+nnoremap <leader>bl :Bufferlist<CR>
+
+" NERDTree
+nnoremap <silent> <F4> :NERDTreeToggle<CR>
+nnoremap <leader>nn :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFind<CR>
+
+" NERDComments
+nnoremap // :TComment<CR>
+vnoremap // :TCommentBlock<CR>
+
+" CTags List
+nnoremap <silent> <F8> :TagbarToggle<CR>
+" Autofocus tagbar
+let g:tagbar_autofocus = 1
+
+" ---------------
+" Command T and ctrlp.vim
+" Snagged from mutewinter @ https://github.com/mutewinter/dot_vim
+" ---------------
+" Ensure Ctrl-P isn't bound by default
+let g:ctrlp_map = ''
+
+" Ensure max height isn't too large. (for performance)
+let g:ctrlp_max_height = 10
+let g:CommandTMaxHeight = 10
+
+" Set the default escape keybinding to, you guessed it, escape.
+let g:CommandTCancelMap = '<esc>'
+
+" Dynamically use Command T or ctrlp.vim based on availability of Ruby.
+" We do this because Command T is much faster than ctrlp.vim.
+if has('ruby')
+    " Use Command T since we've got Ruby
+
+    " Mappings
+    nnoremap <silent><C-t> :CommandT<CR>
+
+    " Leader Commands
+    nnoremap <leader>t :CommandT<CR>
+    nnoremap <leader>b :CommanTBuffer<CR>
+    nnoremap <leader>tt :CommandTTag<CR>
+else
+    " Use ctrlp.vim since we don't have Ruby
+
+    " Conditional Mappings
+    let g:ctrlp_map = '<C-t>'
+
+    " Leader Commands
+    nnoremap <leader>b :CtrlPBuffer<CR>
+endif
+
+" Also map leader commands
+nnoremap <leader>u :CtrlPCurFile<CR>
+nnoremap <leader>m :CtrlPMRUFiles<CR>
+
+" fugitive 
+" Add some shortcuts for git commands
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gc :Gcommit<CR>
+nnoremap <leader>gb :Gblame<CR>
+
+" Toggle QuickFix window
+nnoremap <silent> <F6> :QFix<CR>
+
+nmap <leader>a :Ack<Space>
+nmap <leader>* :Ack<Space><c-r><c-W><CR>
+
+" Syntastic settings
+let g:syntastic_html_tidy_ignore_errors = [
+    \ 'proprietary attribute "ng-show"',
+    \ 'proprietary attribute "ng-controller"',
+    \ 'proprietary attribute "ng-repeat"',
+    \ 'proprietary attribute "ng-app"'
+\ ]
